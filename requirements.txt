@@ -1,0 +1,16 @@
+# FastAPI and server
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Data validation
+pydantic==2.10.3
+
+# HTTP client for Ollama communication
+httpx==0.28.1
+
+# PDF processing
+PyPDF2==3.0.1
+
+# Additional dependencies
+typing-extensions==4.12.2
+annotated-types==0.7.0
