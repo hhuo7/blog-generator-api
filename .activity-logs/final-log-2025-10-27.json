@@ -1,0 +1,23 @@
+{
+  "date": "2025-10-27",
+  "summary": "- docker-compose.yml: 10 changes\n- main.py: 5 changes\n- README.md: 4 changes",
+  "statistics": {
+    "totalFiles": 3,
+    "totalChanges": 19,
+    "mostEditedFile": "docker-compose.yml",
+    "workDuration": "12h 0m",
+    "fileTypes": {
+      "md": 4,
+      "yml": 10,
+      "py": 5
+    },
+    "peakActivityHour": "23:00-0:00",
+    "totalLinesChanged": 3190
+  },
+  "projectDetails": {
+    "branch": "main",
+    "commitHash": "16d7dc8",
+    "remote": "git@github.com:hhuo7/blog-generator-api.git",
+    "name": "d:\\coding\\blog_generator"
+  }
+}
