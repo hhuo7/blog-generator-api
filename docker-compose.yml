@@ -10,61 +10,68 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     environment:
-      # Exposes Ollama to the Docker network properly
       - OLLAMA_HOST=0.0.0.0
-      
-    # Use the standard ollama serve command
-    command: ["serve"]
-    
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      # Increased start_period to give the server ample time to start before the API relies on it
-      start_period: 300s 
+
     restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        echo "Starting Ollama server..."
+        ollama serve &
+        OLLAMA_PID=$!
+        
+        echo "Waiting for Ollama to be ready..."
+        sleep 10
+        
+        echo "Pulling llama3.2:3b model..."
+        ollama pull llama3.2:3b
+        
+        echo "Model ready! Ollama is now serving on port 11434"
+        wait $OLLAMA_PID
 
   # Blog Generator API
   api:
     build:
       context: .
-      # NOTE: Ensure your Dockerfile's FROM line matches a stable version (e.g., 3.12-slim)
       dockerfile: Dockerfile
-      # Removed unused 'args' for PYTHON_VERSION unless it's strictly required by the Dockerfile
+      args:
+        PYTHON_VERSION: "3.13.3"
     container_name: blog-generator-api
     ports:
       - "8080:8080"
-      
-    # Command to pull the model *before* starting Uvicorn
-    # This ensures the model is present and ready on the first run.
-    command: >
-      /bin/sh -c "
-      echo 'Attempting to pull model from API service...' &&
-      curl -X POST http://ollama:11434/api/pull -d '{\"name\": \"llama3.2:3b\"}' || true &&
-      echo 'Starting Uvicorn...' &&
-      exec uvicorn main:app --host 0.0.0.0 --port 8080
-      "
 
     depends_on:
-      # Only requires the Ollama server process to be running,
-      # as the model pull is now handled by the API's command block
       ollama:
         condition: service_started 
-        
     environment:
-      # API uses the internal service name 'ollama'
-      OLLAMA_HOST: http://ollama:11434
-      PYTHONUNBUFFERED: 1
+      # Ollama connection
+      - OLLAMA_HOST=http://ollama:11434
+      - MODEL_NAME=${MODEL_NAME:-llama3.2:3b}
+      
+      # Document configuration
+      - EXAMPLE_POST_FILE=${EXAMPLE_POST_FILE:-example_post.pdf}
+      - COMPANY_DESCRIPTION_FILE=${COMPANY_DESCRIPTION_FILE:-company_description.pdf}
+      - DOCUMENTS_DIR=${DOCUMENTS_DIR:-documents}
+      
+      # Default settings
+      - DEFAULT_TONE=${DEFAULT_TONE:-professional}
+      - DEFAULT_TEMPERATURE=${DEFAULT_TEMPERATURE:-0.7}
+      
+      # Validation settings
+      - MAX_PURPOSE_LENGTH=${MAX_PURPOSE_LENGTH:-500}
+      
+      # Python settings
+      - PYTHONUNBUFFERED=1
     volumes:
+      # Mount your documents folder (read-only)
       - ./documents:/app/documents:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 15s
+      retries: 5
+      start_period: 30s
 
 volumes:
   ollama_data:
