@@ -63,7 +63,7 @@ services:
       # Python settings
       - PYTHONUNBUFFERED=1
     volumes:
-      # Mount your documents folder (read-only)
+      # Mount documents folder (read-only)
       - ./documents:/app/documents:ro
     restart: unless-stopped
     healthcheck:
