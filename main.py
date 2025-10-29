@@ -169,7 +169,7 @@ async def load_documents():
         raise
 
 # ============================================
-# LLM INTERACTION WITH DETERMINISM
+# LLM INTERACTION 
 # ============================================
 
 async def generate_with_ollama(
@@ -264,10 +264,10 @@ def build_prompt(purpose: str, language: str, tone: str) -> str:
     prompt = f"""You are a professional content writer for the company. Your task is to generate a blog post in Markdown format.
 
 COMPANY CONTEXT:
-{app_state['company_description'][:1500]}
+{app_state['company_description']}
 
 STYLE REFERENCE (example post):
-{app_state['example_post'][:1000]}
+{app_state['example_post']}
 
 TASK:
 Generate a blog post with the following specifications:
