@@ -32,7 +32,9 @@ The entire application stack—FastAPI, Ollama, and the LLM—is orchestrated us
 
    **Expected Response:**
 
-   ```{"status":"healthy","model":"llama3.2:3b","documents_loaded":true,"config":{"example_post_file":"example_post.pdf","company_description_file":"company_description.pdf","documents_dir":"documents","default_temperature":0.7}}```
+   ```
+   {"status":"healthy","model":"llama3.2:3b","documents_loaded":true,"config":{"example_post_file":"example_post.pdf","company_description_file":"company_description.pdf","documents_dir":"documents","default_temperature":0.7}}
+   ```
 
 5. **Get current configurations:**
 
@@ -42,7 +44,9 @@ The entire application stack—FastAPI, Ollama, and the LLM—is orchestrated us
 
    **Expected Response:**
 
-   ```{"example_post_file":"example_post.pdf","company_description_file":"company_description.pdf","documents_dir":"documents","model_name":"llama3.2:3b","default_tone":"professional","default_temperature":0.7,"max_purpose_length":500}```
+   ```
+   {"example_post_file":"example_post.pdf","company_description_file":"company_description.pdf","documents_dir":"documents","model_name":"llama3.2:3b","default_tone":"professional","default_temperature":0.7,"max_purpose_length":500}
+   ```
 
 You can access the interactive docs in your browser at `http://127.0.0.1:8080/docs`.
 
